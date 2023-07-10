@@ -1,10 +1,9 @@
 const express = require("express");
 // body parser is used to parse the incoming request bodies in a middleware before you handle it
 const bodyParser = require("body-parser");
-
 const app = express();
+const cors = require("cors");
 const PORT = 8000;
-
 // for the sms you have to call the credentials from the africastalking account
 const credentials = {
   apiKey: "c1f204150597aed660361d22804f93c9d2a231f6d8c22670ed052f59d79d9613",
@@ -13,10 +12,15 @@ const credentials = {
 const AfricasTalking = require("africastalking")(credentials);
 const sms = AfricasTalking.SMS;
 
+app.use(cors());
+app.use(express.json());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 //  const fs = require("fs");
+app.get("/", (request, response) => {
+  response.json({ info: "Node.js, Express, and Postgres API" });
+});
 
 let counter = 0;
 
