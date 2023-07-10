@@ -31,7 +31,7 @@ app.post("/", (req, res) => {
 
   if (text === "") {
     console.log(text);
-    
+
     // This is the first request. Note how we start the response with CON
     response = `CON What appointment would you like to book?
         1. AT Hackathons
