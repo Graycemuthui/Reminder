@@ -16,6 +16,7 @@
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
     "mongoose": "^7.3.1",
+    "pg": "^8.11.1",
     "play-sound": "^1.1.5",
     "ussd-menu-builder": "^1.2.0"
   },
