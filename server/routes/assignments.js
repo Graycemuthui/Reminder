@@ -33,27 +33,13 @@ router.get("/:id", async (req, res) => {
 
 // create a assignment
 
-router.post("/", async (req, res) => {
+router.post("/assignments", async (req, res) => {
   try {
-    const {
-      assignment_name,
-      assignment_description,
-      assignment_due_date,
-      assignment_status,
-      assignment_priority,
-    } = req.body;
+    const { student_id, lecturer_id, course_id } = req.body;
     const newAssignment = await pool.query(
-      "INSERT INTO assignments (assignment_name, assignment_description, assignment_due_date, assignment_status, assignment_priority) VALUES($1, $2, $3, $4, $5) RETURNING *",
-      [
-        assignment_name,
-        assignment_description,
-        assignment_due_date,
-        assignment_status,
-        assignment_priority,
-      ]
+      "INSERT INTO assignments (student_id, lecturer_id, course_id) VALUES($1, $2, $3) RETURNING *",
+      [student_id, lecturer_id, course_id]
     );
-    // push new assignment to assignments array
-    assignments.push(newAssignment.rows[0]);
     res.json(newAssignment.rows[0]);
   } catch (err) {
     console.error(err.message);
