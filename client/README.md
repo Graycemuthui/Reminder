@@ -1,70 +1,205 @@
-# Getting Started with Create React App
+# Reminder
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+- This is a reminder app that helps remind students of their classes, assignments, and exams.
 
-## Available Scripts
+## Setup
 
-In the project directory, you can run:
+- Create the client and server folders
+- Start by downloading the dependencies
+- We will start with the server side first
+- Create a index.js file
+- Create a .gitignore file
+- Create a package.json file
+- Run 'npm init' to create a package.json file
+- Install the dependencies
+- Run 'npm install'
+- Create a .gitignore file
+- Run 'npm i express pg cors'
+- Install nodemon
+- Run 'npm i -D nodemon'
+- Call the dependencies in the index.js file(express, cors, pg)
+- Add middleware
 
-### `npm start`
+```
+app.use(cors());
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+```
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+- Call the express.json() middleware
 
-### `npm test`
+```
+app.use(express.json());
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+```
 
-### `npm run build`
+- Create the database
+- Create a database.sql file
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+```
+CREATE DATABASE reminder;
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+CREATE DATABASE reminder;
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+CREATE TABLE students(
+  id BIGINT PRIMARY KEY,
+  first_name VARCHAR (255) NOT NULL,
+  last_name VARCHAR (255) NOT NULL,
+  email VARCHAR (255) NOT NULL,
+  school VARCHAR (255) NOT NULL,
+  department VARCHAR (255) NOT NULL,
+  phone_number BIGINT NOT NULL,
+  date DATE
+);
 
-### `npm run eject`
+CREATE TABLE lecturers(
+  id BIGINT PRIMARY KEY,
+  student_id BIGINT NOT NULL,
+  first_name VARCHAR (255) NOT NULL,
+  last_name VARCHAR (255) NOT NULL,
+  email VARCHAR (255) NOT NULL,
+  school VARCHAR (255) NOT NULL,
+  department VARCHAR (255) NOT NULL,
+  phone_number BIGINT NOT NULL,
+  date DATE
+);
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+ALTER TABLE lecturers
+ADD CONSTRAINT fk_students
+    FOREIGN KEY(student_id)
+    REFERENCES students(id);
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+CREATE TABLE courses(
+  id BIGINT PRIMARY KEY,
+  student_id BIGINT NOT NULL,
+  lecturer_id BIGINT NOT NULL,
+  course_name VARCHAR (255) NOT NULL,
+  course_code VARCHAR (255) NOT NULL,
+  course_unit INT NOT NULL,
+  date DATE
+);
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+ALTER TABLE courses
+ADD CONSTRAINT fk_students
+    FOREIGN KEY(student_id)
+    REFERENCES students(id);
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+ALTER TABLE courses
+ADD CONSTRAINT fk_lecturers
+    FOREIGN KEY (lecturer_id)
+    REFERENCES lecturers(id);
 
-## Learn More
+CREATE TABLE assignments(
+  id BIGINT PRIMARY KEY,
+  student_id BIGINT NOT NULL,
+  lecturer_id BIGINT NOT NULL,
+  course_id BIGINT NOT NULL,
+  date DATE
+);
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+ALTER TABLE assignments
+ADD CONSTRAINT fk_students
+    FOREIGN KEY(student_id)
+    REFERENCES students(id);
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+ALTER TABLE assignments
+ADD CONSTRAINT fk_lecturers
+    FOREIGN KEY (lecturer_id)
+    REFERENCES lecturers(id);
 
-### Code Splitting
+ALTER TABLE assignments
+ADD CONSTRAINT fk_courses
+    FOREIGN KEY (course_id)
+    REFERENCES courses(id);
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+CREATE TABLE classes(
+  id BIGINT PRIMARY KEY,
+  student_id BIGINT NOT NULL,
+  lecturer_id BIGINT NOT NULL,
+  course_id BIGINT NOT NULL,
+  date DATE
+);
 
-### Analyzing the Bundle Size
+ALTER TABLE classes
+ADD CONSTRAINT fk_students
+    FOREIGN KEY(student_id)
+    REFERENCES students(id);
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+ALTER TABLE classes
+ADD CONSTRAINT fk_lecturers
+    FOREIGN KEY (lecturer_id)
+    REFERENCES lecturers(id);
 
-### Making a Progressive Web App
+ALTER TABLE classes
+ADD CONSTRAINT fk_courses
+    FOREIGN KEY (course_id)
+    REFERENCES courses(id);
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+CREATE TABLE exams(
+  id BIGINT PRIMARY KEY,
+  student_id BIGINT NOT NULL,
+  lecturer_id BIGINT NOT NULL,
+  course_id BIGINT NOT NULL,
+  date DATE
+);
 
-### Advanced Configuration
+ALTER TABLE exams
+ADD CONSTRAINT fk_students
+    FOREIGN KEY(student_id)
+    REFERENCES students(id);
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+ALTER TABLE exams
+ADD CONSTRAINT fk_lecturers
+    FOREIGN KEY (lecturer_id)
+    REFERENCES lecturers(id);
 
-### Deployment
+ALTER TABLE exams
+ADD CONSTRAINT fk_courses
+    FOREIGN KEY (course_id)
+    REFERENCES courses(id);
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+CREATE TABLE reminders(
+  id BIGINT PRIMARY KEY,
+  student_id BIGINT NOT NULL,
+  lecturer_id BIGINT NOT NULL,
+  course_id BIGINT NOT NULL,
+  reminder VARCHAR (255) NOT NULL,
+  date DATE
+);
 
-### `npm run build` fails to minify
+ALTER TABLE reminders
+ADD CONSTRAINT fk_students
+    FOREIGN KEY(student_id)
+    REFERENCES students(id);
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+ALTER TABLE reminders
+ADD CONSTRAINT fk_lecturers
+    FOREIGN KEY (lecturer_id)
+    REFERENCES lecturers(id);
+
+ALTER TABLE reminders
+ADD CONSTRAINT fk_courses
+    FOREIGN KEY (course_id)
+    REFERENCES courses(id);
+
+
+```
+
+## Installation
+
+- Clone the repository
+- Install the dependencies
+- Run the app
+
+## Dependencies
+
+- [Node.js](https://nodejs.org/en/)
+- [React](https://reactjs.org/)
+- [PostgreSQL](https://www.postgresql.org/)
+- [Express](https://expressjs.com/)
+
+## Run the app
+
+- Run `npm install` to install the dependencies
+- Run `npm start` to start the app
+- Run `npm run build` to build the app
+- Run `npm run test` to test the app
